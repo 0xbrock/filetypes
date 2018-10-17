@@ -3,13 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTypeChecker", "FileTypeChecker\FileTypeChecker.csproj", "{0AE201D3-CE5B-404F-8C25-36BD929E1D19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileTypeChecker", "FileTypeChecker\FileTypeChecker.csproj", "{0AE201D3-CE5B-404F-8C25-36BD929E1D19}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTypeChecker.Tests", "FileTypeChecker.Tests\FileTypeChecker.Tests.csproj", "{716D0AB2-5088-4A22-A6E8-24B8D2F2039B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1019EF17-64B8-4C70-BB39-A12DBFB30A16}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		LICENSE.md = LICENSE.md
 		README.md = README.md
 	EndProjectSection
 EndProject
