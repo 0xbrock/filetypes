@@ -20,7 +20,7 @@
 
             private FileTypeChecker checker;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void SetUp()
             {
                 bitmap = new MemoryStream();
@@ -59,7 +59,7 @@
 
             private FileTypeChecker checker;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void SetUp()
             {
                 bitmap = new MemoryStream();
@@ -124,7 +124,7 @@
 
             private FileTypeChecker checker;
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void SetUp()
             {
                 bitmap = new MemoryStream();
