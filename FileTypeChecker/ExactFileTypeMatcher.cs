@@ -1,5 +1,11 @@
-﻿namespace FileTypeChecker
+﻿// <copyright file="ExactFileTypeMatcher.cs" company="Dan Abramov">
+// Copyright © 2015-2018 Dan Abramov. All rights reserved.
+// Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+namespace FileTypeChecker
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -15,7 +21,12 @@
 
         protected override bool MatchesPrivate(Stream stream)
         {
-            foreach (var b in bytes)
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+
+            foreach (var b in this.bytes)
             {
                 if (stream.ReadByte() != b)
                 {
