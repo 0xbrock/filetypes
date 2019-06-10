@@ -1,77 +1,102 @@
 ﻿namespace FileTypeChecker.Tests
 {
-    using System.Drawing.Imaging;
+
     using System.IO;
     using System.Linq;
     using System.Collections.Generic;
-    using NUnit.Framework;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System.Drawing.Imaging;
 
-    using Properties;
-
-    [TestFixture]
+    [TestClass]
     public class FileTypeCheckerTests
     {
-        [TestFixture]
+
+        public static MemoryStream LoadFile(string file)
+        {
+            MemoryStream memory;
+            // LAND.bmp is from http://www.fileformat.info/format/bmp/sample/
+            using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read))
+            {
+                var bytes = new byte[stream.Length];
+                stream.Read(bytes, 0, bytes.Length);
+                memory = new MemoryStream(bytes);
+            }
+
+            return memory;
+        }
+
+        [TestClass]
         public class WhenTheFileIsKnown
         {
-            private MemoryStream bitmap;
-
-            private MemoryStream pdf;
-
             private FileTypeChecker checker;
 
-            [TestFixtureSetUp]
+            [TestInitialize]
             public void SetUp()
             {
-                bitmap = new MemoryStream();
-                // LAND.bmp is from http://www.fileformat.info/format/bmp/sample/
-                Resources.LAND.Save(bitmap, ImageFormat.Bmp);
-                // http://boingboing.net/2015/03/23/free-pdf-advanced-quantum-the.html
-                pdf = new MemoryStream(Resources.advancedquantumthermodynamics);
                 checker = new FileTypeChecker();
             }
 
-            [Test]
+            [TestMethod]
             public void ItDetectsPDFs()
             {
+                var pdf = LoadFile("Resources/pdf.pdf");
                 var fileTypes = checker.GetFileTypes(pdf);
                 CollectionAssert.AreEquivalent(
                     new[] { "Portable Document Format" },
-                    fileTypes.Select(fileType => fileType.Name));
+                    fileTypes.Select(fileType => fileType.Name).ToArray());
             }
 
-            [Test]
+            [TestMethod]
             public void ItDetectsBMPs()
             {
+                var bitmap = LoadFile("Resources/bmp.bmp");
                 var fileTypes = checker.GetFileTypes(bitmap);
                 CollectionAssert.AreEquivalent(
                     new[] { "Bitmap" },
-                    fileTypes.Select(fileType => fileType.Name));
+                    fileTypes.Select(fileType => fileType.Name).ToArray());
+            }
+
+
+            [TestMethod]
+            public void ItDetectsPNGs()
+            {
+                var bitmap = LoadFile("Resources/png.png");
+                var fileTypes = checker.GetFileTypes(bitmap);
+                CollectionAssert.AreEquivalent(
+                    new[] { "Portable Network Graphic" },
+                    fileTypes.Select(fileType => fileType.Name).ToArray());
+            }
+
+
+            [TestMethod]
+            public void ItDetectsJPGs()
+            {
+                using(var bitmap = LoadFile("Resources/jpg.jpg"))
+                {
+                    Assert.IsTrue(checker.IsValidExtension(bitmap, ".jpg"));
+                }                
+            }
+
+            [TestMethod]
+            public void ItDetectsGIFs()
+            {
+                var bitmap = LoadFile("Resources/gif.gif");
+                var fileTypes = checker.GetFileTypes(bitmap);
+                CollectionAssert.AreEquivalent(
+                    new[] { "Graphics Interchange Format 89a" },
+                    fileTypes.Select(fileType => fileType.Name).ToArray());
             }
         }
 
-        [TestFixture]
+        [TestClass]
         public class WhenTheFileIsUnknown
         {
-            private MemoryStream bitmap;
-
-            private MemoryStream pdf;
-
             private FileTypeChecker checker;
 
-            [TestFixtureSetUp]
-            public void SetUp()
-            {
-                bitmap = new MemoryStream();
-                // LAND.bmp is from http://www.fileformat.info/format/bmp/sample/
-                Resources.LAND.Save(bitmap, ImageFormat.Bmp);
-                // http://boingboing.net/2015/03/23/free-pdf-advanced-quantum-the.html
-                pdf = new MemoryStream(Resources.advancedquantumthermodynamics);
-            }
-
-            [Test]
+            [TestMethod]
             public void ItDoesntDetectPDFs()
             {
+                var pdf = LoadFile("Resources/pdf.pdf");
                 checker = new FileTypeChecker(new List<FileType>
                 {
                     new FileType("Bitmap", ".bmp", new ExactFileTypeMatcher(new byte[] {0x42, 0x4d})),
@@ -91,9 +116,10 @@
                     fileType.Name);
             }
 
-            [Test]
+            [TestMethod]
             public void ItDoesntDetectBMPs()
             {
+                var bitmap = LoadFile("Resources/bmp.bmp");
                 checker = new FileTypeChecker(new List<FileType>
                 {
                     new FileType("Portable Network Graphic", ".png",
@@ -115,28 +141,15 @@
 
         }
 
-        [TestFixture]
+        [TestClass]
         public class WhenTheFileIsUnknownList
         {
-            private MemoryStream bitmap;
-
-            private MemoryStream pdf;
-
             private FileTypeChecker checker;
 
-            [TestFixtureSetUp]
-            public void SetUp()
-            {
-                bitmap = new MemoryStream();
-                // LAND.bmp is from http://www.fileformat.info/format/bmp/sample/
-                Resources.LAND.Save(bitmap, ImageFormat.Bmp);
-                // http://boingboing.net/2015/03/23/free-pdf-advanced-quantum-the.html
-                pdf = new MemoryStream(Resources.advancedquantumthermodynamics);
-            }
-
-            [Test]
+            [TestMethod]
             public void ItDoesntDetectPDFs()
             {
+                var pdf = LoadFile("Resources/pdf.pdf");
                 checker = new FileTypeChecker(new List<FileType>
                 {
                     new FileType("Bitmap", ".bmp", new ExactFileTypeMatcher(new byte[] {0x42, 0x4d})),
@@ -154,9 +167,10 @@
                 Assert.AreEqual(0, fileTypes.Count());
             }
 
-            [Test]
+            [TestMethod]
             public void ItDoesntDetectBMPs()
             {
+                var bitmap = LoadFile("Resources/bmp.bmp");
                 checker = new FileTypeChecker(new List<FileType>
                 {
                     new FileType("Portable Network Graphic", ".png",

@@ -1,5 +1,6 @@
 ﻿namespace FileTypeChecker
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -21,9 +22,28 @@
                         new ExactFileTypeMatcher(new byte[] {0x47, 0x49, 0x46, 0x38, 0x37, 0x61})),
                     new FileType("Graphics Interchange Format 89a", ".gif",
                         new ExactFileTypeMatcher(new byte[] {0x47, 0x49, 0x46, 0x38, 0x39, 0x61})),
-                    new FileType("Portable Document Format", ".pdf", new RangeFileTypeMatcher(new ExactFileTypeMatcher(new byte[] { 0x25, 0x50, 0x44, 0x46 }), 1019))
+                    new FileType("Portable Document Format", ".pdf", new RangeFileTypeMatcher(new ExactFileTypeMatcher(new byte[] { 0x25, 0x50, 0x44, 0x46 }), 1019)),
+                    new FileType("JPEG", ".jpg", new JpegFileMatcher()),
+                    new FileType("JSON", ".json", new JsonFileMatcher()),
+                    new FileType("XML", ".xml", new XmlFileMatcher())
                     // ... Potentially more in future
                 };
+        }
+
+        public bool IsValidExtension(Stream stream, string extension)
+        {
+
+            var aux = (extension ?? "").Trim().ToLower();
+
+            if (aux.StartsWith(".") == false) aux = "." + aux;
+            if (aux == ".jpeg") aux = ".jpg";
+
+            var types = knownFileTypes.Where(f => f.Extension == aux).ToArray();
+
+            if (types.Length == 0) return false;
+
+            return knownFileTypes.Any(fileType => fileType.Matches(stream));
+
         }
 
         public FileTypeChecker(IList<FileType> knownFileTypes)

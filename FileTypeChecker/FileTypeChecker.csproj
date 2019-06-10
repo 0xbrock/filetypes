@@ -3,14 +3,15 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <Description>File type checker that checks the file's magic numbers/identifying bytes. Useful for verifying uploaded files in web applications. NuGet package of code originally written by https://github.com/mjolka and extended to allow for dependency injecting the known file types. </Description>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <PackageProjectUrl>https://github.com/0xbrock/FileTypeChecker</PackageProjectUrl>
     <Company>HP</Company>
     <PackageIconUrl>https://github.com/0xbrock/FileTypeChecker</PackageIconUrl>
     <RepositoryType>git</RepositoryType>
     <Copyright>Copyright © HP 2015</Copyright>
     <RepositoryUrl>https://github.com/0xbrock/FileTypeChecker</RepositoryUrl>
-    <PackageReleaseNotes>- Support to .NET STANDARD 2.0</PackageReleaseNotes>
+    <PackageReleaseNotes>- Include another types check
+- Corrected on test project</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
