@@ -7,5 +7,6 @@ namespace FileTypeChecker
     {
         FileType GetFileType(Stream fileContent);
         IEnumerable<FileType> GetFileTypes(Stream stream);
+        bool IsValidExtension(Stream stream, string extension);
     }
 }
